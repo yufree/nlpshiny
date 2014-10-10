@@ -57,7 +57,10 @@ shinyUI(fluidPage(
                                      h5("Kneser-Ney Smoothing is slow"),
                                      p('Well, I suggested using Stupid Kick-off first and then using Kneser-Ney when necessary.'),
                                      h6('Well, I have a better idea...'),
-                                     p('Contact me by click a("here", href = "mailto:yufreecas@gmail.com") or just debug the code from a("Github",href = "https://github.com/yufree/nlpshiny"'))
+                                     "Contact me by click",
+                                     a("here", href = "mailto:yufreecas@gmail.com"),
+                                     'or just debug the code from',
+                                     a("Github",href = "https://github.com/yufree/nlpshiny")
                                      )
-        )
+        ))
 ))
