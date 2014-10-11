@@ -33,7 +33,7 @@ shinyUI(fluidPage(
                 tabsetPanel(type = "tabs", 
                             tabPanel("Instruction", 
                                      h4("Instruction"),
-                                     p('Portable office actually means the works done on the cellphones or tablets and we need input system to saving our time on typing on those device. So a smart and efficient keyboard is required. The core of this input system is a predictive language model and this shiny app is builded based on n-gram model with Stupid Bach-off Smoothing and Kneser-Ney Smoothing.'),
+                                     p('Portable office actually means the works done on the cellphones or tablets and we need input system to saving our time on typing on those device. So a smart and efficient keyboard is required. The core of this input system is a predictive language model and this shiny app is builded based on n-gram model with Stupid Back-off Smoothing and Kneser-Ney Smoothing.'),
                                      h4("Usage"),
                                      p("You could input a sentence in the topleft panel, select the words you'd like to see, e.g. 3 words by default and try to find a smooth method for the n-gram model. Then press SUBMIT. You will see:"),
                                      h5(textOutput('sent')),
