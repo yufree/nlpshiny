@@ -16,7 +16,7 @@ shinyUI(fluidPage(
                           h5("Input the sentence"),
                           "Data Science"),
                 numericInput("n",
-                             label = "numbers of words", 
+                             h5("numbers of words"), 
                              value = 3),
                 radioButtons("radio", 
                              h5("Smoothing selection"),
@@ -37,7 +37,7 @@ shinyUI(fluidPage(
                                      h4("Usage"),
                                      p("You could input a sentence in the topleft panel, select the words you'd like to see, e.g. 3 words by default and try to find a smooth method for the n-gram model. Then press SUBMIT. You will see:"),
                                      h5(textOutput('sent')),
-                                     p('as your sentences and'),
+                                     p('as your sentence and'),
                                      h5(textOutput('text')),
                                      p('as prediceted words or just a WARNING.'),
                                      'See technique details in the',
@@ -45,7 +45,14 @@ shinyUI(fluidPage(
                                      'tag and limitations in the',
                                      span('Limitation',style = "color:blue"),
                                      'tag.'), 
-                            tabPanel("Tech", h4("Summary")), 
+                            tabPanel("Tech", 
+                                     h4("N-gram model"),
+                                     p("Using a higher probability of the last words in terms will predict next words for certain sentence and this is the core of N-gram model. The n-gram model worked well if the terms were huge enough to cover any cases. However, such model will cost a lot of time training the data. Another way is just using a back-off model to change n-gram model into (n-1)-gram model. The simplest back-off model will first get the probability of every (n-1) terms, order them and show the first few words as prediction. When no words were shown, a (n-1)-gram model will be used until uni-gram model, which will show the most common words in the corpus."),
+                                     h5('Smoothing'),
+                                     p("However, such case that there were only one terms in a tri-gram while many terms in a bi-gram for certain words will make a simple back-off model hard to distribute the probability to the candidates. A common way is that smoothing the counts on the n-gram. Good-Turing Estimate show a good idea to get the probability space for (n-1)-gram model."),
+                                     p("I use an absolute discounting on each counts based on Ney et al.'s study.The Kneser-Ney Smoothing were employed to get the probability with a combination of (n-1)-gram. I actually combined a Kneser-Ney Smoothing with a back-off model: When the model could find terms in the tri-gram, a tri-gram Kneser-Ney model will be used. While the model can't find a hit in tri-gram, a bi-gram Kneser-Ney Smoothing were run. Those two Kneser-Ney Smoothing have different discountings."),
+                                     h5("Stupid Backoff Implementation"),
+                                     p("The model above were slow to show predicted words and I speed up the model with less code and a relative small loss of prediction accuracy. The core of the code called Stupid Backoff implementation, which is often used in web-based corpus. The core of this backoff implementation is that using a fixed discount for (n-1)-gram's possibiliy. With a huge corpus, the performance of Stupid Backoff implementation will show a similar prediction accuracy with the Kneser-Ney Smoothing.")), 
                             tabPanel("Limitaions",
                                      h4("Known BUGs"),
                                      h5("Can't pass quiz ..."),
@@ -61,6 +68,13 @@ shinyUI(fluidPage(
                                      a("here", href = "mailto:yufreecas@gmail.com"),
                                      'or just debug the code from',
                                      a("Github",href = "https://github.com/yufree/nlpshiny")
+                                     ),
+                            tabPanel("Reference",
+                                     h6("Körner, M. C. (n.d.). Implementation of Modified Kneser-Ney Smoothing on Top of Generalized Language Models for Next Word Prediction Bachelorarbeit, (September 2013)."),
+                                     h6("Williams, G. (2014). Data Science with R Text Mining."),
+                                     h6(a("Coursera Discussion Board",href = "https://class.coursera.org/dsscapstone-001/forum)")),
+                                     h6(a("Google",href = "http://www.google.com"))
                                      )
+                            
         ))
 ))

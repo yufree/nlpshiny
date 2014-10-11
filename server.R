@@ -13,9 +13,9 @@ load('ngram0.RData')
 shinyServer(function(input, output) {
         dataInput <- reactive({
                 if(input$radio == 1){
-                        predict0(input$entry,unigramDF,bigramDF,trigramDF,maxResults = input$n)
+                        predict0(input$entry,badwords,unigramDF,bigramDF,trigramDF,maxResults = input$n)
                 }else{
-                        predictKN(input$entry,unigramDF,bigramDF,trigramDF,maxResults = input$n)
+                        predictKN(input$entry,badwords,unigramDF,bigramDF,trigramDF,maxResults = input$n)
                 }
                 })
         

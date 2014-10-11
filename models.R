@@ -1,6 +1,5 @@
 library(tm)
-predict0 <-function(input,unigramDF, bigramDF, trigramDF, maxResults = 3) {
-        badwords <- readLines('badword.txt')
+predict0 <-function(input,badwords,unigramDF, bigramDF, trigramDF, maxResults = 3) {
         sw <- stopwords(kind = "en")
         input <- removePunctuation(input)
         input <- removeNumbers(input)
@@ -31,6 +30,8 @@ predict0 <-function(input,unigramDF, bigramDF, trigramDF, maxResults = 3) {
                 predictWord <- predictWord[order(predictWord$score,decreasing = T),]
                 # in case replicated
                 final <- unique(predictWord$next_word)
+                final <- setdiff(final,badwords)
+                final <- final[grepl('[[:alpha:]]',final)]
                 return(final[1:maxResults])
         } 
         subbi$s <- 0.4*subbi$freq/sum(seekbi)
@@ -47,7 +48,7 @@ predict0 <-function(input,unigramDF, bigramDF, trigramDF, maxResults = 3) {
         return(final)
 }
 
-predictKN2 <- function(input,D2,P,subbi,cw2,nw2,unigram,bigram,maxResults = 3){
+predictKN2 <- function(input,badwords,D2,P,subbi,cw2,nw2,unigram,bigram,maxResults = 3){
         # kick off to unigram if no bigram
         if(nw2 == 0) {
                 return(head(unigram[order(unigram$freq,decreasing = T),1],maxResults))
@@ -70,7 +71,7 @@ predictKN2 <- function(input,D2,P,subbi,cw2,nw2,unigram,bigram,maxResults = 3){
         return(final)
 }
 
-predictKN <- function(input,unigramDF,bigramDF,trigramDF,maxResults = 3){
+predictKN <- function(input,badwords,unigramDF,bigramDF,trigramDF,maxResults = 3){
         # get the freq of freq of n-gram to get D for smooth
         uni.freqfreq <- data.frame(uni=table(unigramDF$freq))
         bi.freqfreq <- data.frame(Bi=table(bigramDF$freq))
@@ -80,7 +81,6 @@ predictKN <- function(input,unigramDF,bigramDF,trigramDF,maxResults = 3){
         D2 <- bi.freqfreq[1,2]/(bi.freqfreq[1,2]+2*bi.freqfreq[2,2])
         D3 <- tri.freqfreq[1,2]/(tri.freqfreq[1,2]+2*tri.freqfreq[1,2])
         # process the words
-        
         sw <- stopwords(kind = "en")
         input <- removePunctuation(input)
         input <- removeNumbers(input)
@@ -109,7 +109,7 @@ predictKN <- function(input,unigramDF,bigramDF,trigramDF,maxResults = 3){
         p1 <- D2*nw2/cw2/nw
         if(cw1w2 == 0){
                 # kick off to 2-gram model
-                return(predictKN2(input2,D2,p1,subbi,cw2,nw2,unigramDF,bigramDF,maxResults = maxResults))
+                return(predictKN2(input2,badwords,D2,p1,subbi,cw2,nw2,unigramDF,bigramDF,maxResults = maxResults))
         }
         cp <- unique(subbi$name)
         pkn <- rep(NA,length(cp))
